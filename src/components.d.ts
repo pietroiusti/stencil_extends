@@ -6,22 +6,46 @@
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 export namespace Components {
+    interface BaseComp {
+        /**
+          * @default ''
+         */
+        "value": string;
+    }
+    interface DerivedComp {
+        /**
+          * @default ''
+         */
+        "value": string;
+    }
     interface MyComponent {
         /**
           * The first name
          */
-        "first": string;
+        "first"?: string;
         /**
           * The last name
          */
-        "last": string;
+        "last"?: string;
         /**
           * The middle name
          */
-        "middle": string;
+        "middle"?: string;
     }
 }
 declare global {
+    interface HTMLBaseCompElement extends Components.BaseComp, HTMLStencilElement {
+    }
+    var HTMLBaseCompElement: {
+        prototype: HTMLBaseCompElement;
+        new (): HTMLBaseCompElement;
+    };
+    interface HTMLDerivedCompElement extends Components.DerivedComp, HTMLStencilElement {
+    }
+    var HTMLDerivedCompElement: {
+        prototype: HTMLDerivedCompElement;
+        new (): HTMLDerivedCompElement;
+    };
     interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {
     }
     var HTMLMyComponentElement: {
@@ -29,10 +53,48 @@ declare global {
         new (): HTMLMyComponentElement;
     };
     interface HTMLElementTagNameMap {
+        "base-comp": HTMLBaseCompElement;
+        "derived-comp": HTMLDerivedCompElement;
         "my-component": HTMLMyComponentElement;
     }
 }
 declare namespace LocalJSX {
+    interface BaseComp {
+        /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * @default ''
+         */
+        "value"?: string;
+    }
+    interface DerivedComp {
+        /**
+          * If `true`, the user cannot interact with the element.
+         */
+        "disabled"?: boolean;
+        /**
+          * The `id` of a `<form>` element to associate this element with.
+         */
+        "form"?: string;
+        /**
+          * The name of the element, used when submitting an HTML form.
+         */
+        "name"?: string;
+        /**
+          * @default ''
+         */
+        "value"?: string;
+    }
     interface MyComponent {
         /**
           * The first name
@@ -48,6 +110,12 @@ declare namespace LocalJSX {
         "middle"?: string;
     }
 
+    interface BaseCompAttributes {
+        "value": string;
+    }
+    interface DerivedCompAttributes {
+        "value": string;
+    }
     interface MyComponentAttributes {
         "first": string;
         "middle": string;
@@ -55,6 +123,8 @@ declare namespace LocalJSX {
     }
 
     interface IntrinsicElements {
+        "base-comp": Omit<BaseComp, keyof BaseCompAttributes> & { [K in keyof BaseComp & keyof BaseCompAttributes]?: BaseComp[K] } & { [K in keyof BaseComp & keyof BaseCompAttributes as `attr:${K}`]?: BaseCompAttributes[K] } & { [K in keyof BaseComp & keyof BaseCompAttributes as `prop:${K}`]?: BaseComp[K] };
+        "derived-comp": Omit<DerivedComp, keyof DerivedCompAttributes> & { [K in keyof DerivedComp & keyof DerivedCompAttributes]?: DerivedComp[K] } & { [K in keyof DerivedComp & keyof DerivedCompAttributes as `attr:${K}`]?: DerivedCompAttributes[K] } & { [K in keyof DerivedComp & keyof DerivedCompAttributes as `prop:${K}`]?: DerivedComp[K] };
         "my-component": Omit<MyComponent, keyof MyComponentAttributes> & { [K in keyof MyComponent & keyof MyComponentAttributes]?: MyComponent[K] } & { [K in keyof MyComponent & keyof MyComponentAttributes as `attr:${K}`]?: MyComponentAttributes[K] } & { [K in keyof MyComponent & keyof MyComponentAttributes as `prop:${K}`]?: MyComponent[K] };
     }
 }
@@ -62,6 +132,8 @@ export { LocalJSX as JSX };
 declare module "@stencil/core" {
     export namespace JSX {
         interface IntrinsicElements {
+            "base-comp": LocalJSX.IntrinsicElements["base-comp"] & JSXBase.HTMLAttributes<HTMLBaseCompElement>;
+            "derived-comp": LocalJSX.IntrinsicElements["derived-comp"] & JSXBase.HTMLAttributes<HTMLDerivedCompElement>;
             "my-component": LocalJSX.IntrinsicElements["my-component"] & JSXBase.HTMLAttributes<HTMLMyComponentElement>;
         }
     }
